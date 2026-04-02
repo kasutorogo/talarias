@@ -1,0 +1,26 @@
+{
+  "name": "talarias",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Desktop template launcher for searching, editing, and copying Markdown or text snippets with global shortcuts.",
+  "scripts": {
+    "dev": "tauri dev",
+    "dev:frontend": "vite",
+    "build": "tauri build",
+    "build:frontend": "vite build",
+    "build:mac": "tauri build --bundles dmg",
+    "build:win": "tauri build --bundles nsis",
+    "build:win:ja": "cross-env TALARIAS_LOCALE=ja tauri build --bundles nsis",
+    "check": "vite build && cargo check --manifest-path src-tauri/Cargo.toml",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.10.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.10.1",
+    "cross-env": "^10.1.0",
+    "vite": "^8.0.3"
+  }
+}
