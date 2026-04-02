@@ -1,0 +1,47 @@
+{
+  "name": "talarias",
+  "version": "0.1.0",
+  "description": "Desktop template launcher for searching, editing, and copying Markdown or text snippets with global shortcuts.",
+  "talariasLocale": "en",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer.js",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:win:ja": "electron-builder --win --x64 --config build.win-ja.json",
+    "build": "electron-builder --mac --win"
+  },
+  "build": {
+    "appId": "com.zenmarket.talarias",
+    "productName": "Talarias",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "templates/**/*",
+      "icon.png"
+    ],
+    "mac": {
+      "icon": "icon.icns",
+      "target": "dmg"
+    },
+    "win": {
+      "icon": "icon.png",
+      "target": "nsis"
+    },
+    "nsis": {
+      "installerLanguages": [
+        "en_US"
+      ],
+      "multiLanguageInstaller": false,
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
+    }
+  },
+  "devDependencies": {
+    "electron": "^36.3.2",
+    "electron-builder": "^26.0.0"
+  }
+}

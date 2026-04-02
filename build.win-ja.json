@@ -1,0 +1,15 @@
+{
+  "directories": {
+    "output": "dist/win-ja"
+  },
+  "artifactName": "Talarias Setup ${version} JA.${ext}",
+  "nsis": {
+    "installerLanguages": [
+      "ja_JP"
+    ],
+    "multiLanguageInstaller": false
+  },
+  "extraMetadata": {
+    "talariasLocale": "ja"
+  }
+}
