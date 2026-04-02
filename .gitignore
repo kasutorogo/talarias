@@ -3,9 +3,20 @@ node_modules/
 dist/
 src-tauri/target/
 src-tauri/gen/
+artifacts/
+.talarias-data/
+.xwin-cache/
 
-# Local package archives
+# Generated packages and installers
 *.zip
+*.dmg
+*.exe
+*.msi
+*.app
+*.AppImage
+*.deb
+*.rpm
+*.pdb
 
 # macOS metadata inside templates or other folders
 **/.DS_Store
