@@ -95,6 +95,4 @@ Notes:
 - For the most reliable Windows installer build, build on Windows.
 - Cross-building Windows installers from macOS or Linux is possible with Tauri, but it is less tested than building on Windows directly.
 
-## GitHub description
-
-Desktop template launcher for searching, editing, and copying Markdown or text snippets with global shortcuts.
+> Coded with Codex
