@@ -2,8 +2,6 @@
 
 Talarias is a desktop launcher for searching, previewing, editing, and copying reusable text templates.
 
-This repository contains source code only. Generated installers, app bundles, and build output are intentionally excluded from Git.
-
 ## Stack
 
 - Tauri 2
