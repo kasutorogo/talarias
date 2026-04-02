@@ -419,9 +419,10 @@ app.whenReady().then(() => {
     return { ok: true, ...getTemplatesRootInfo() };
   });
 
-  ipcMain.handle('choose-templates-root', async () => {
+  ipcMain.handle('choose-templates-root', async (event) => {
     const current = getTemplatesRootDir();
-    const result = await dialog.showOpenDialog(mainWindow || undefined, {
+    const ownerWindow = BrowserWindow.fromWebContents(event.sender) || mainWindow || undefined;
+    const result = await dialog.showOpenDialog(ownerWindow, {
       title: t('chooseTemplatesFolderTitle'),
       defaultPath: current,
       properties: ['openDirectory', 'createDirectory']
