@@ -134,7 +134,7 @@ function updateSize() {
 
 appShell.addEventListener('mousedown', async (event) => {
   if (event.button !== 0) return;
-  if (event.target.closest('input, textarea, button, select, option, .result-item')) return;
+  if (event.target.closest('input, textarea, button, select, option, .results, .result-item')) return;
 
   try {
     await appWindow.startDragging();

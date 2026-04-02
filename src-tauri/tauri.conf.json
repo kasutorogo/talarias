@@ -15,9 +15,9 @@
         "label": "main",
         "title": "Talarias",
         "width": 580,
-        "height": 80,
+        "height": 138,
         "minWidth": 380,
-        "minHeight": 80,
+        "minHeight": 138,
         "center": true,
         "resizable": false,
         "decorations": false

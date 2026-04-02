@@ -25,10 +25,10 @@ const UI_LOCALE: &str = match option_env!("TALARIAS_LOCALE") {
 };
 const DEFAULT_MAIN_SHORTCUT: &str = "Alt+Shift+Z";
 const WIN_WIDTH: f64 = 580.0;
-const INPUT_HEIGHT: f64 = 80.0;
+const BASE_HEIGHT: f64 = 138.0;
 const RESULT_ITEM_HEIGHT: f64 = 50.0;
 const MAX_VISIBLE_RESULTS: usize = 7;
-const EDITOR_HEIGHT: f64 = 480.0;
+const EDITOR_HEIGHT: f64 = 526.0;
 
 #[derive(Default)]
 struct AppState {
@@ -777,7 +777,7 @@ async fn copy_text(app: AppHandle<Wry>, text: String) -> Result<GenericResponse,
 
 #[tauri::command]
 async fn resize_window(window: Window, result_count: usize, editor_open: bool) -> Result<(), String> {
-    let mut height = INPUT_HEIGHT;
+    let mut height = BASE_HEIGHT;
     if result_count > 0 && !editor_open {
         height += (result_count.min(MAX_VISIBLE_RESULTS) as f64) * RESULT_ITEM_HEIGHT + 2.0;
     }
