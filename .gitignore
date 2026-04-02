@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+dist/
+
+# Local package archives
+*.zip
+
+# macOS metadata inside templates or other folders
+**/.DS_Store

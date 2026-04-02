@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Talarias Welcome</title>
+  <style>
+    :root {
+      --bg: radial-gradient(circle at top, rgba(92, 63, 20, 0.55) 0%, rgba(32, 22, 12, 0.98) 58%, rgba(18, 12, 8, 0.99) 100%);
+      --panel: rgba(38, 27, 16, 0.96);
+      --text: #f7edd7;
+      --muted: #ddb977;
+      --line: #8f6a33;
+      --accent: #f1c66d;
+      --focus: #ffd27f;
+      --btn-bg: #342312;
+      --btn-border: #9b7337;
+      --kbd-bg: rgba(124, 90, 37, 0.22);
+      --input-bg: #291c10;
+      --red: #ef4444;
+    }
+
+    body.light {
+      --bg: radial-gradient(circle at top, rgba(255, 236, 197, 0.92) 0%, rgba(255, 245, 231, 0.98) 60%, rgba(248, 236, 214, 0.98) 100%);
+      --panel: rgba(255, 250, 242, 0.96);
+      --text: #4c3313;
+      --muted: #9d7336;
+      --line: #d3ad70;
+      --accent: #b8842f;
+      --focus: #c49138;
+      --btn-bg: #f5e8cf;
+      --btn-border: #caa56a;
+      --kbd-bg: rgba(216, 176, 96, 0.16);
+      --input-bg: #fffaf2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      padding: 18px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    .panel {
+      height: 100%;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      padding: 24px 26px 20px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    h2 {
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    p, li {
+      font-size: 13px;
+      line-height: 1.58;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .hint {
+      color: var(--muted);
+    }
+
+    ul {
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    code, kbd, .term {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--kbd-bg);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .folder-box,
+    .shortcut-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .folder-box input,
+    .shortcut-box input {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: var(--input-bg);
+      color: var(--accent);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 13px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255, 236, 191, 0.08);
+    }
+
+    .shortcut-box input {
+      flex: 0 0 220px;
+    }
+
+    .folder-box input:focus,
+    .shortcut-box input:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 1px rgba(241, 198, 109, 0.22);
+    }
+
+    .shortcut-box input.valid { border-color: var(--accent); }
+    .shortcut-box input.invalid { border-color: var(--red); }
+
+    .status {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .status.valid { color: var(--accent); }
+    .status.invalid { color: var(--red); }
+
+    .button-row,
+    .theme-row,
+    .footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-row {
+      margin-top: auto;
+    }
+
+    button {
+      border: 1px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--accent);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255, 236, 191, 0.12);
+    }
+
+    button:hover {
+      border-color: var(--focus);
+    }
+
+    .theme-btn.active {
+      border-color: var(--focus);
+    }
+
+    .footer {
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <h2 id="headerTitle">Talarias (Template Launcher)</h2>
+
+    <div>
+      <p id="templatesTitle" class="section-title">Templates folder</p>
+      <p id="templatesHint1" class="hint">Choose the folder where your templates will live.</p>
+      <div class="folder-box" style="margin-top:8px;">
+        <input id="templatesFolderInput" type="text" spellcheck="false" readonly />
+        <button id="chooseFolderBtn" type="button">Choose Folder</button>
+      </div>
+      <p id="templatesHint2" class="hint" style="margin-top:8px;">Each first-level subfolder inside that folder will appear in the dropdown at the bottom of the editor.</p>
+      <p id="templatesHint3" class="hint" style="margin-top:4px;">Only one level is shown in that dropdown. If one of those folders contains another subfolder, that second level will not appear there.</p>
+    </div>
+
+    <div>
+      <p id="howTitle" class="section-title">How it works</p>
+      <ul id="howList">
+        <li>Put your <code>.md</code> or <code>.txt</code> templates inside the selected folder.</li>
+        <li>Start typing to search. Use <kbd>Arrow keys</kbd> to navigate and <kbd>Enter</kbd> to open a template.</li>
+        <li>You can edit the text before copying.</li>
+        <li>Press <kbd>Escape</kbd> to go back to the search input.</li>
+      </ul>
+    </div>
+
+    <div>
+      <p id="powerTitle" class="section-title">Power features</p>
+      <ul id="powerList">
+        <li><span class="term">Alias</span> Assign a short keyword to any template for faster search.</li>
+        <li><span class="term">Shortcut</span> Bind a keyboard shortcut to copy a template directly to clipboard without opening the app.</li>
+        <li><span class="term">Folder filter</span> Use the dropdown at the bottom of the editor to load templates from a specific first-level subfolder.</li>
+      </ul>
+    </div>
+
+    <div>
+      <p id="globalShortcutTitle" class="section-title">Global shortcut to bring the app to front</p>
+      <div class="shortcut-box" style="margin-top:8px;">
+        <input id="shortcutInput" type="text" spellcheck="false" readonly />
+        <span id="shortcutStatus" class="status"></span>
+      </div>
+      <p id="shortcutHint" class="hint" style="margin-top:6px;">Press a key combination to change it, or leave it as is.</p>
+    </div>
+
+    <div class="theme-row">
+      <span id="themeLabel" class="hint">Theme:</span>
+      <button id="themeDark" class="theme-btn active" type="button">Dark</button>
+      <button id="themeLight" class="theme-btn" type="button">Light</button>
+    </div>
+
+    <div class="footer">
+      <label><input type="checkbox" id="dismissCheck" /> <span id="dismissLabel">Don't show again</span></label>
+      <button id="closeBtn" type="button">Got it</button>
+    </div>
+  </main>
+
+  <script>
+    const shortcutInput = document.getElementById('shortcutInput');
+    const shortcutStatus = document.getElementById('shortcutStatus');
+    const templatesFolderInput = document.getElementById('templatesFolderInput');
+    const UI_STRINGS = {
+      en: {
+        pageTitle: 'Talarias Welcome',
+        headerTitle: 'Talarias (Template Launcher)',
+        templatesTitle: 'Templates folder',
+        templatesHint1: 'Choose the folder where your templates will live.',
+        chooseFolder: 'Choose Folder',
+        templatesHint2: 'Each first-level subfolder inside that folder will appear in the dropdown at the bottom of the editor.',
+        templatesHint3: 'Only one level is shown in that dropdown. If one of those folders contains another subfolder, that second level will not appear there.',
+        howTitle: 'How it works',
+        howList: [
+          'Put your <code>.md</code> or <code>.txt</code> templates inside the selected folder.',
+          'Start typing to search. Use <kbd>Arrow keys</kbd> to navigate and <kbd>Enter</kbd> to open a template.',
+          'You can edit the text before copying.',
+          'Press <kbd>Escape</kbd> to go back to the search input.'
+        ],
+        powerTitle: 'Power features',
+        powerList: [
+          '<span class="term">Alias</span> Assign a short keyword to any template for faster search.',
+          '<span class="term">Shortcut</span> Bind a keyboard shortcut to copy a template directly to clipboard without opening the app.',
+          '<span class="term">Folder filter</span> Use the dropdown at the bottom of the editor to load templates from a specific first-level subfolder.'
+        ],
+        globalShortcutTitle: 'Global shortcut to bring the app to front',
+        shortcutHint: 'Press a key combination to change it, or leave it as is.',
+        themeLabel: 'Theme:',
+        dark: 'Dark',
+        light: 'Light',
+        dismissLabel: "Don't show again",
+        close: 'Got it',
+        needsModifier: 'Needs a modifier (Ctrl, Alt, Shift)',
+        saved: 'Saved'
+      },
+      ja: {
+        pageTitle: 'Talarias へようこそ',
+        headerTitle: 'Talarias (Template Launcher)',
+        templatesTitle: 'テンプレートフォルダ',
+        templatesHint1: 'テンプレートを保存するフォルダを選択してください。',
+        chooseFolder: 'フォルダを選択',
+        templatesHint2: 'そのフォルダ直下の第一階層サブフォルダが、エディタ下部のドロップダウンに表示されます。',
+        templatesHint3: 'ドロップダウンに表示されるのは一階層目だけです。さらに下の二階層目のサブフォルダは表示されません。',
+        howTitle: '使い方',
+        howList: [
+          '選択したフォルダに <code>.md</code> または <code>.txt</code> のテンプレートを入れてください。',
+          '入力を始めると検索できます。<kbd>Arrow keys</kbd> で移動し、<kbd>Enter</kbd> でテンプレートを開きます。',
+          'コピーする前にテキストを編集できます。',
+          '<kbd>Escape</kbd> を押すと検索入力に戻ります。'
+        ],
+        powerTitle: '便利な機能',
+        powerList: [
+          '<span class="term">エイリアス</span> よく使うテンプレートに短い検索キーワードを割り当てられます。',
+          '<span class="term">ショートカット</span> アプリを開かずにテンプレートを直接コピーするキーボードショートカットを設定できます。',
+          '<span class="term">フォルダフィルター</span> エディタ下部のドロップダウンから第一階層のサブフォルダを切り替えられます。'
+        ],
+        globalShortcutTitle: 'アプリを前面に表示するグローバルショートカット',
+        shortcutHint: 'キーの組み合わせを押して変更できます。今のままでも使えます。',
+        themeLabel: 'テーマ:',
+        dark: 'ダーク',
+        light: 'ライト',
+        dismissLabel: '次回から表示しない',
+        close: 'OK',
+        needsModifier: '修飾キーが必要です (Ctrl / Alt / Shift)',
+        saved: '保存しました'
+      }
+    };
+    let uiLocale = 'en';
+
+    function t(key) {
+      return UI_STRINGS[uiLocale]?.[key] ?? UI_STRINGS.en[key];
+    }
+
+    function updateThemeBtns(theme) {
+      document.getElementById('themeDark').classList.toggle('active', theme === 'dark');
+      document.getElementById('themeLight').classList.toggle('active', theme === 'light');
+    }
+
+    function updateTemplatesFolder(info) {
+      templatesFolderInput.value = info?.path || '';
+      templatesFolderInput.title = info?.path || '';
+    }
+
+    function applyText() {
+      document.title = t('pageTitle');
+      document.getElementById('headerTitle').textContent = t('headerTitle');
+      document.getElementById('templatesTitle').textContent = t('templatesTitle');
+      document.getElementById('templatesHint1').textContent = t('templatesHint1');
+      document.getElementById('chooseFolderBtn').textContent = t('chooseFolder');
+      document.getElementById('templatesHint2').textContent = t('templatesHint2');
+      document.getElementById('templatesHint3').textContent = t('templatesHint3');
+      document.getElementById('howTitle').textContent = t('howTitle');
+      document.getElementById('howList').innerHTML = t('howList').map(item => `<li>${item}</li>`).join('');
+      document.getElementById('powerTitle').textContent = t('powerTitle');
+      document.getElementById('powerList').innerHTML = t('powerList').map(item => `<li>${item}</li>`).join('');
+      document.getElementById('globalShortcutTitle').textContent = t('globalShortcutTitle');
+      document.getElementById('shortcutHint').textContent = t('shortcutHint');
+      document.getElementById('themeLabel').textContent = t('themeLabel');
+      document.getElementById('themeDark').textContent = t('dark');
+      document.getElementById('themeLight').textContent = t('light');
+      document.getElementById('dismissLabel').textContent = t('dismissLabel');
+      document.getElementById('closeBtn').textContent = t('close');
+    }
+
+    (async () => {
+      uiLocale = await window.welcomeAPI.getUiLocale();
+      applyText();
+      const theme = await window.welcomeAPI.getTheme();
+      if (theme === 'light') document.body.classList.add('light');
+      updateThemeBtns(theme);
+
+      const sc = await window.welcomeAPI.getMainShortcut();
+      shortcutInput.value = sc || 'Alt+Shift+Z';
+
+      updateTemplatesFolder(await window.welcomeAPI.getTemplatesRoot());
+    })();
+
+    document.getElementById('chooseFolderBtn').addEventListener('click', async () => {
+      const result = await window.welcomeAPI.chooseTemplatesRoot();
+      if (result && !result.canceled) updateTemplatesFolder(result);
+    });
+
+    document.getElementById('themeDark').addEventListener('click', async () => {
+      document.body.classList.remove('light');
+      updateThemeBtns('dark');
+      await window.welcomeAPI.setTheme('dark');
+    });
+
+    document.getElementById('themeLight').addEventListener('click', async () => {
+      document.body.classList.add('light');
+      updateThemeBtns('light');
+      await window.welcomeAPI.setTheme('light');
+    });
+
+    shortcutInput.addEventListener('keydown', async (e) => {
+      e.preventDefault();
+      if (['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) return;
+
+      const parts = [];
+      if (e.ctrlKey || e.metaKey) parts.push('CommandOrControl');
+      if (e.altKey) parts.push('Alt');
+      if (e.shiftKey) parts.push('Shift');
+
+      if (!parts.length) {
+        shortcutInput.value = e.key;
+        shortcutInput.className = 'invalid';
+        shortcutStatus.textContent = t('needsModifier');
+        shortcutStatus.className = 'status invalid';
+        return;
+      }
+
+      let keyName = e.key;
+      if (keyName.length === 1) keyName = keyName.toUpperCase();
+      else {
+        const map = { 'ArrowUp': 'Up', 'ArrowDown': 'Down', 'ArrowLeft': 'Left', 'ArrowRight': 'Right', ' ': 'Space' };
+        keyName = map[keyName] || keyName;
+      }
+
+      parts.push(keyName);
+      const shortcut = parts.join('+');
+      shortcutInput.value = shortcut;
+
+      const result = await window.welcomeAPI.saveShortcut(shortcut);
+      if (result.ok) {
+        shortcutInput.className = 'valid';
+        shortcutStatus.textContent = t('saved');
+        shortcutStatus.className = 'status valid';
+      } else {
+        shortcutInput.className = 'invalid';
+        shortcutStatus.textContent = result.error || 'Invalid';
+        shortcutStatus.className = 'status invalid';
+      }
+    });
+
+    document.getElementById('closeBtn').addEventListener('click', async () => {
+      if (document.getElementById('dismissCheck').checked) {
+        await window.welcomeAPI.dismissWelcome();
+      }
+      window.close();
+    });
+  </script>
+</body>
+</html>
