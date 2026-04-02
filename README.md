@@ -90,12 +90,6 @@ Windows:
 npm run build:win
 ```
 
-Windows Japanese build:
-
-```bash
-npm run build:win:ja
-```
-
 Notes:
 
 - For the most reliable Windows installer build, build on Windows.
