@@ -1,4 +1,29 @@
-let state = {
+import {
+  chooseTemplatesRoot,
+  copyText,
+  getAliases,
+  getBindings,
+  getSelectedFolder,
+  getTemplatesRoot,
+  getTheme,
+  getUiLocale,
+  listFolders,
+  loadTemplates,
+  onBindingCopied,
+  onLauncherOpened,
+  refreshAliases,
+  removeBinding,
+  resizeWindow,
+  searchTemplates,
+  saveAlias,
+  saveBinding,
+  setSelectedFolder,
+  setTheme,
+  validateShortcut,
+} from './lib/api.js';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+
+const state = {
   templates: [],
   filtered: [],
   selectedIndex: -1,
@@ -20,6 +45,8 @@ const aliasInput = document.getElementById('aliasInput');
 const folderSelect = document.getElementById('folderSelect');
 const rootFolderBtn = document.getElementById('rootFolderBtn');
 const themeToggle = document.getElementById('themeToggle');
+const appShell = document.querySelector('.app-shell');
+const appWindow = getCurrentWindow();
 let uiLocale = 'en';
 
 const UI_STRINGS = {
@@ -99,11 +126,22 @@ function shortenPath(p) {
 }
 
 function updateSize() {
-  window.templateLauncher.resizeWindow({
+  resizeWindow({
     resultCount: resultsEl.classList.contains('hidden') ? 0 : state.filtered.length,
     editorOpen: state.editorOpen
   });
 }
+
+appShell.addEventListener('mousedown', async (event) => {
+  if (event.button !== 0) return;
+  if (event.target.closest('input, textarea, button, select, option, .result-item')) return;
+
+  try {
+    await appWindow.startDragging();
+  } catch {
+    // Ignore drag failures so regular clicks keep working.
+  }
+});
 
 function closeEditor() {
   state.editorOpen = false;
@@ -130,7 +168,7 @@ async function openEditor(item) {
   previewEditor.value = item.body;
   editorPanel.classList.remove('hidden');
 
-  state.allBindings = await window.templateLauncher.getBindings();
+  state.allBindings = await getBindings();
   const existing = findBindingForTemplate(item.id);
   shortcutInput.value = existing;
   if (existing) {
@@ -143,7 +181,7 @@ async function openEditor(item) {
     shortcutStatus.className = '';
   }
 
-  const allAliases = await window.templateLauncher.getAliases();
+  const allAliases = await getAliases();
   aliasInput.value = allAliases[item.id] || '';
 
   previewEditor.focus();
@@ -157,13 +195,13 @@ function renderFolderOptions(folders) {
 }
 
 async function refreshFolderOptions() {
-  const folders = await window.templateLauncher.listFolders();
+  const folders = await listFolders();
   renderFolderOptions(folders);
   return folders;
 }
 
 async function syncTemplatesRootButton() {
-  const info = await window.templateLauncher.getTemplatesRoot();
+  const info = await getTemplatesRoot();
   rootFolderBtn.title = info?.path ? t('templatesFolderStatus', info.path) : t('templatesFolder');
   rootFolderBtn.textContent = info?.custom ? t('changeFolder') : t('chooseFolder');
 }
@@ -210,7 +248,7 @@ function runSearch() {
     return;
   }
 
-  state.filtered = window.templateLauncher.searchTemplates(q);
+  state.filtered = searchTemplates(q);
   state.selectedIndex = state.filtered.length ? 0 : -1;
   showResults();
 }
@@ -231,7 +269,7 @@ function confirmSelection() {
 async function copyTemplate() {
   const text = previewEditor.value.trim();
   if (!text) return;
-  await window.templateLauncher.copyText(text);
+  await copyText(text);
   setStatus(t('copied'));
 }
 
@@ -242,8 +280,8 @@ shortcutInput.addEventListener('keydown', async (e) => {
 
   if (e.key === 'Backspace' || e.key === 'Delete') {
     if (state.currentItem) {
-      await window.templateLauncher.removeBinding(state.currentItem.id);
-      state.allBindings = await window.templateLauncher.getBindings();
+      await removeBinding(state.currentItem.id);
+      state.allBindings = await getBindings();
     }
     shortcutInput.value = '';
     shortcutInput.className = '';
@@ -281,18 +319,18 @@ shortcutInput.addEventListener('keydown', async (e) => {
 
   if (!state.currentItem) return;
 
-  const result = await window.templateLauncher.validateShortcut(shortcut, state.currentItem.id);
+  const result = await validateShortcut(shortcut, state.currentItem.id);
   if (result.valid) {
     shortcutInput.className = 'valid';
     shortcutStatus.textContent = t('saved');
     shortcutStatus.className = 'valid';
-    await window.templateLauncher.saveBinding(shortcut, {
+    await saveBinding(shortcut, {
       id: state.currentItem.id,
       title: state.currentItem.title,
       category: state.currentItem.category,
       body: state.currentItem.body
     });
-    state.allBindings = await window.templateLauncher.getBindings();
+    state.allBindings = await getBindings();
   } else {
     shortcutInput.className = 'invalid';
     shortcutStatus.textContent = result.error;
@@ -310,8 +348,8 @@ aliasInput.addEventListener('input', () => {
   clearTimeout(aliasTimer);
   aliasTimer = setTimeout(async () => {
     if (!state.currentItem) return;
-    await window.templateLauncher.saveAlias(state.currentItem.id, aliasInput.value.trim());
-    await window.templateLauncher.refreshAliases();
+    await saveAlias(state.currentItem.id, aliasInput.value.trim());
+    await refreshAliases();
   }, 400);
 });
 
@@ -321,7 +359,7 @@ aliasInput.addEventListener('keydown', (e) => {
 
 async function loadFolder(folder, { showStatus = true } = {}) {
   state.currentFolder = folder || null;
-  const result = await window.templateLauncher.loadTemplates(state.currentFolder);
+  const result = await loadTemplates(state.currentFolder);
   if (result && result.ok) {
     state.templates = result.templates.map(t => ({
       ...t,
@@ -337,16 +375,16 @@ async function loadFolder(folder, { showStatus = true } = {}) {
 // Folder dropdown
 folderSelect.addEventListener('change', async () => {
   const val = folderSelect.value;
-  await window.templateLauncher.setSelectedFolder(val);
+  await setSelectedFolder(val);
   await loadFolder(val);
 });
 
 rootFolderBtn.addEventListener('click', async () => {
   closeEditor();
-  const result = await window.templateLauncher.chooseTemplatesRoot();
-  if (!result || result.canceled) return;
+  const result = await chooseTemplatesRoot();
+  if (!result || result.canceled || result.error) return;
 
-  await window.templateLauncher.setSelectedFolder('');
+  await setSelectedFolder('');
   await refreshFolderOptions();
   folderSelect.value = '';
   await syncTemplatesRootButton();
@@ -385,17 +423,21 @@ previewEditor.addEventListener('keydown', (e) => {
 
 copyBtn.addEventListener('click', copyTemplate);
 
-window.templateLauncher.onLauncherOpened(async () => {
-  closeEditor();
-  hideResults();
-  searchInput.value = '';
-  searchInput.focus();
-  updateSize();
-});
+(async () => {
+  await onLauncherOpened(async () => {
+    closeEditor();
+    hideResults();
+    searchInput.value = '';
+    searchInput.focus();
+    updateSize();
+  });
+})();
 
-window.templateLauncher.onBindingCopied((title) => {
-  setStatus(t('copiedTitle', title));
-});
+(async () => {
+  await onBindingCopied((title) => {
+    setStatus(t('copiedTitle', title));
+  });
+})();
 
 // Theme
 let currentTheme = 'dark';
@@ -409,28 +451,27 @@ function applyTheme(theme) {
 themeToggle.addEventListener('click', async () => {
   currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
   applyTheme(currentTheme);
-  await window.templateLauncher.setTheme(currentTheme);
+  await setTheme(currentTheme);
 });
 
 // Init
 (async function init() {
-  uiLocale = await window.templateLauncher.getUiLocale();
+  uiLocale = await getUiLocale();
   applyUiText();
-  applyTheme(await window.templateLauncher.getTheme());
+  applyTheme(await getTheme());
 
-  // Load folders
   const folders = await refreshFolderOptions();
   await syncTemplatesRootButton();
 
-  const savedFolder = await window.templateLauncher.getSelectedFolder();
+  const savedFolder = await getSelectedFolder();
   const initialFolder = folders.includes(savedFolder) ? savedFolder : '';
   if (savedFolder && !initialFolder) {
-    await window.templateLauncher.setSelectedFolder('');
+    await setSelectedFolder('');
   }
   folderSelect.value = initialFolder;
   await loadFolder(initialFolder, { showStatus: false });
 
-  state.allBindings = await window.templateLauncher.getBindings();
+  state.allBindings = await getBindings();
   searchInput.focus();
   updateSize();
 })();

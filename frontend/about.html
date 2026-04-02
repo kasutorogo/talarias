@@ -65,35 +65,11 @@
 </head>
 <body>
   <main class="card">
-    <img class="icon" src="../icon.png" alt="Talarias icon" />
+    <img class="icon" src="/icon.png" alt="Talarias icon" />
     <h1 id="appName">Talarias</h1>
     <p class="version" id="appVersion">Version 0.1.0</p>
     <p class="subtitle" id="appSubtitle">Template workflow launcher</p>
   </main>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name') || 'Talarias';
-    const version = params.get('version') || '0.1.0';
-    const locale = params.get('locale') || 'en';
-    const strings = {
-      en: {
-        title: (appName) => `About ${appName}`,
-        version: (appVersion) => `Version ${appVersion}`,
-        subtitle: 'Template workflow launcher'
-      },
-      ja: {
-        title: (appName) => `${appName} について`,
-        version: (appVersion) => `バージョン ${appVersion}`,
-        subtitle: 'テンプレート作業用ランチャー'
-      }
-    };
-    const t = strings[locale] || strings.en;
-
-    document.title = t.title(name);
-    document.getElementById('appName').textContent = name;
-    document.getElementById('appVersion').textContent = t.version(version);
-    document.getElementById('appSubtitle').textContent = t.subtitle;
-  </script>
+  <script type="module" src="./about.js"></script>
 </body>
 </html>

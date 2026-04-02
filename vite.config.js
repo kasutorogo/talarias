@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: resolve(__dirname, 'src'),
+  root: resolve(__dirname, 'frontend'),
   publicDir: resolve(__dirname, 'public'),
   server: {
     port: 1420,
@@ -13,9 +13,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/index.html'),
-        welcome: resolve(__dirname, 'src/welcome.html'),
-        about: resolve(__dirname, 'src/about.html')
+        main: resolve(__dirname, 'frontend/index.html'),
+        welcome: resolve(__dirname, 'frontend/welcome.html'),
+        about: resolve(__dirname, 'frontend/about.html')
       }
     }
   }

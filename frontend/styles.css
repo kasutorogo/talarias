@@ -55,11 +55,13 @@ button, input, textarea, select { font: inherit; }
   height: 100vh;
   padding: 10px;
   gap: 6px;
+  app-region: drag;
   -webkit-app-region: drag;
   background: transparent;
 }
 
 #searchInput, button, .result-item, #previewEditor, #shortcutInput, #aliasInput, #folderSelect {
+  app-region: no-drag;
   -webkit-app-region: no-drag;
 }
 

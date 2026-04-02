@@ -1,6 +1,7 @@
 # Talarias
 
-Talarias is a desktop launcher for searching, editing, and copying reusable text templates.
+Talarias is a desktop launcher for searching, editing, and copying reusable text templates.  
+This version is built with Tauri, Vite, and Rust.
 
 ## Features
 
@@ -10,30 +11,42 @@ Talarias is a desktop launcher for searching, editing, and copying reusable text
 - Global shortcuts
 - User-selectable templates folder
 - Folder dropdown based on first-level subfolders
+- Golden light and dark themes
+- Welcome and About windows
 
-## Included by default
+## Default content
 
-This repository includes Bash script templates in [`templates/BASH_SCRIPT`](./templates/BASH_SCRIPT).
+The repository includes Bash script templates in [`templates/BASH_SCRIPT`](./templates/BASH_SCRIPT) so the app shows useful sample content on first launch.
 
-The app is not limited to Bash templates. Users can point Talarias to any folder on their machine.
+Users can later choose any templates folder on their own machine.
 
-## How it works
+## Project structure
 
-- Choose a templates root folder
-- Search `.md` and `.txt` files recursively
-- Use the folder dropdown to filter by first-level subfolder
-- Edit the template before copying if needed
+- `frontend/`: HTML, CSS, and JavaScript for the app UI
+- `src-tauri/`: Rust backend, window setup, native integrations, and bundling
+- `templates/`: bundled sample templates
 
-Nested folders deeper than one level are still searchable, but they do not appear as separate options in the dropdown.
+## How templates work
 
-## Quick start
+- Talarias searches `.md` and `.txt` files recursively.
+- The folder dropdown only shows the first level of subfolders inside the selected root.
+- Deeper nested folders are still searchable, but they do not appear as separate dropdown options.
+- Markdown templates remove the first `# ...` heading and trim everything from `## Relacionado` onward.
+
+## Development
 
 ```bash
 npm install
-npm start
+npm run dev
 ```
 
-## Build commands
+## Checks
+
+```bash
+npm run check
+```
+
+## Builds
 
 ```bash
 npm run build:mac
